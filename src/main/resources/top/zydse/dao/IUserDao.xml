@@ -1,10 +1,44 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0 //EN"
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.zydse.dao.IUserDao">
     <!--配置查询所有-->
     <select id="findAll" resultType="top.zydse.domain.User">
         select * from user
+    </select>
+
+    <!--配置插入一条记录-->
+    <insert id="saveUser" parameterType="top.zydse.domain.User">
+        insert into user (username,sex,address,birthday) values (#{username},#{sex},#{address},#{birthday});
+    </insert>
+
+    <!--配置更新一条记录-->
+    <update id="updateUser" parameterType="top.zydse.domain.User">
+        update user set username = #{username},address = #{address},sex = #{sex}, birthday = #{birthday} where id = #{id}
+    </update>
+
+    <!--配置删除一一条记录（使用id）-->
+    <delete id="deleteUser" parameterType="java.lang.Integer">
+        delete from user where id = #{uid}
+    </delete>
+
+    <!--配置根据id查询单条记录-->
+    <select id="findById" parameterType="java.lang.Integer" resultType="top.zydse.domain.User">
+        select * from user where id = #{uid}
+    </select>
+
+    <!--配置根据用户姓名模糊查询-->
+    <select id="findByName" parameterType="java.lang.String" resultType="top.zydse.domain.User">
+        <!--
+        可以用这一句sql语句模糊查询，其中value是固定写法，不能换成其他值，
+        好处是可以不用在参数处加%，但底层执行将不使用PreparedStatement
+        select * from user where username like '%${value}%'
+        -->
+        select * from user where username like #{name}
+    </select>
+
+    <select id="findTotal" resultType="int">
+        select count(id) from user;
     </select>
 </mapper>
